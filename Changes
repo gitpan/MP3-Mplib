@@ -1,0 +1,6 @@
+Revision history for Perl extension MP3::Mplib.
+
+0.01  Sat Oct  5 10:35:51 2002
+	- original version; created by h2xs 1.21 with options
+		-O -n MP3::Mplib mplib.h
+
