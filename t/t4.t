@@ -17,7 +17,7 @@ my $mp3 = MP3::Mplib->new(File::Spec->catfile("t", "test.mp3"));
 ok(1,
     "instantiating an MP3::Mplib object");
     
-ok($mp3->set_v1tag({ NOT_THERE => 1 }) == 0,  
+ok(!defined($mp3->set_v1tag({ NOT_THERE => 1 })),  
     "id3v1: setting invalid field");
     
 ok(MP3::Mplib->error->{NOT_THERE} == &MP_EFNF, 

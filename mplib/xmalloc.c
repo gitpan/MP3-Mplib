@@ -18,7 +18,7 @@
 
 #include <sys/types.h>
 #include <stdio.h>
-#define XMALLOC_CHECK 1
+/* define XMALLOC_CHECK 1 */
 #include "xmalloc.h"
 #ifdef USE_GC
 # include <gc.h>

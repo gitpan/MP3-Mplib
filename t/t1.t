@@ -39,7 +39,7 @@ ok($tag->{TCOP} eq 'Copyright 2001, 2002 by Autrijus Tang <autrijus@autrijus.org
     "id3v2: TCOP");
 ok($tag->{TYER} == 2525, 
     "id3v2: TYER");
-ok($tag->{TPE1} == "test artist", 
+ok($tag->{TPE1} eq "test artist", 
     "id3v2: TPE1");
 ok($tag->{WXXX}->{url} eq "http://search.cpan.org/author/AUTRIJUS/Games-AIBots-0.03/lib/Games/AIBot.pm", 
     "id3v2: WXXX->url");

@@ -43,6 +43,7 @@
 #include "xmalloc.h"
 
 
+
 /******************************/
 /*      Static functions           */
 /******************************/
@@ -266,8 +267,8 @@ id3v2_add_tag(int fd, id3v2_tag *tag, id3v2_tag *old)
 	btag = btag_start = xmallocd0(tag->header->total_tag_size,
 			    "id3v2_add_tag:btag");
 	strncpy(btag, "ID3", 3); btag += 3;
-	memcpy(btag, ((char*)&tag->header->version_minor), 1); btag += 1;
-	memcpy(btag, ((char*)&tag->header->version_revision), 1); btag += 1;
+	*btag = (char)tag->header->version_minor; btag += 1;
+	*btag = (char)tag->header->version_revision; btag += 1;
 	flag |= ((tag->header->unsyncronization & 1) << 7);
 	flag |= ((tag->header->has_extended_header & 1) << 6);
 	flag |= ((tag->header->is_experimental & 1) << 5);
@@ -306,7 +307,7 @@ id3v2_add_tag(int fd, id3v2_tag *tag, id3v2_tag *old)
 		xfree(d);
 		btag += 4;
 		
-		memcpy(btag, (char *)&(tag->header->extended_header->no_flag_bytes), 1); btag += 1;
+		*btag = (char)tag->header->extended_header->no_flag_bytes; btag += 1;
 		flag = ((tag->header->extended_header->is_update & 1) << 6);
 		flag |= ((tag->header->extended_header->crc_data_present & 1) << 5);
 		flag |= ((tag->header->extended_header->restrictions & 1) << 4);
@@ -318,13 +319,13 @@ id3v2_add_tag(int fd, id3v2_tag *tag, id3v2_tag *old)
 		if(tag->header->extended_header->crc_data_present) 
 		{
 			int length = tag->header->extended_header->crc_data_length ? tag->header->extended_header->crc_data_length : 5;
-			memcpy(btag, (char*)&(length), 1); btag += 1;
+			*btag = (char)length; btag += 1;
 			memcpy(btag, tag->header->extended_header->crc_data, length); btag += 1;
 		}
 		if(tag->header->extended_header->restrictions) 
 		{
 			int length = tag->header->extended_header->restrictions_data_length ? tag->header->extended_header->restrictions_data_length : 5;
-			memcpy(btag, (char*)&(length), 1); btag += 1;
+			*btag = (char)length; btag += 1;
 			memcpy(btag, tag->header->extended_header->restrictions_data, length); btag += 1;
 		}
 	}
@@ -694,6 +695,7 @@ id3v2_get_tag(int fd)
 	while(lseek(fd, 0L, SEEK_CUR) < header->total_tag_size)
 	{
 		int hasEnc = 0, hasLang = 0, d;
+		
 		read(fd, c, 10); /* Read header */
 		
 		/* break if padding is reached - this should never happen here.. */
@@ -723,6 +725,7 @@ id3v2_get_tag(int fd)
 		}
 		frame_list->data = frame;
 	}
+	
 	xfree(c);
 	return tag;
 	
@@ -916,7 +919,7 @@ id3_sync(unsigned char* data, long length)
 static long
 id3_unsync(unsigned char* data, long length)
 {
-	/* FIXME */
+	/* TODO */
 	/* this function is supposed to make syncsafe values normal again */
 	/* we don't need this yet, because there are no fields supported that will */
 	/* have the unsynchronization scheme applied */
@@ -1022,7 +1025,8 @@ id3_add_frame(id3v2_frame_list *list, char *field, char *new_value, int len)
 	len_sync = id3_sync(new_value, len);
 	
 	frame = XMALLOCD(id3v2_frame, "id3_add_frame:frame");
-	frame->frame_id = field;
+	frame->frame_id = xmallocd(4, "id3_add_frame:frame->frame_id");
+	strncpy(frame->frame_id, field, 4);
 	frame->data = new_value;
 	frame->status_flag = 0;
 	

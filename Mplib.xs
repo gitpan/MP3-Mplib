@@ -863,7 +863,7 @@ delete_tags(filename, ver)
         }
 
 void 
-clean_up(filename)
+_clean_up(filename)
         char * filename;
     PROTOTYPE: $
     PPCODE:
@@ -893,7 +893,7 @@ clean_up(filename)
         mp_free_list(taglist->first);
 
 void
-dump_structure(filename)
+_dump_structure(filename)
         char * filename;
     INIT:
         id3_tag_list * taglist, *iter;

@@ -256,7 +256,13 @@ extern mpeg_header *mp_get_mpeg_header_from_file __P((const char*));
 extern mpeg_header *mp_get_mpeg_header_from_fd __P((int));
 
 
-/* Allocates a label for the header fields value */
+/* Frees a mpeg header structure
+ *  Arg 1   - The allocated mpeg header
+ */
+#define mp_free_mpeg_header(str) xfree(str)
+
+
+/* Allocates a label with the appropriate header field value as a string */
 extern char *mp_get_str_version __P((const mpeg_header*));
 extern char *mp_get_str_layer __P((const mpeg_header*));
 extern char *mp_get_str_bitrate __P((const mpeg_header*));
@@ -264,7 +270,9 @@ extern char *mp_get_str_samplingfreq __P((const mpeg_header*));
 extern char *mp_get_str_mode __P((const mpeg_header*));
 
 
-/* Gets a list of tags found in the given file
+/* Allocates and fills a list of tags found in the given file. This list
+ * will contain at least one and at most two tags or is NULL if no tags
+ * have been found.
  *  Arg 1   - The files name/file descriptor to search for tags
  *  Returns - A pointer to a initialized list struct or null if no tags have
  *            been found
@@ -273,7 +281,12 @@ extern id3_tag_list* mp_get_tag_list_from_file __P((const char*));
 extern id3_tag_list* mp_get_tag_list_from_fd __P((int));
 
 
-/* Gets the first content found of a specified field
+/* Frees a tag list beginning with the given element XXX */
+extern void mp_free_list __P((id3_tag_list*));
+
+
+/* Gets the first content found of a specified field in the given tag and
+ * allocates a struct.
  *  Arg 1   - The tag
  *  Arg 2   - The fields identifier
  *
@@ -297,14 +310,16 @@ extern id3_content* mp_get_content __P((const id3_tag*, int));
  */
 extern id3_content* mp_get_content_at_pos __P((const id3_tag*, int, int));
 
-/* Gets a custom fields content
+/* Gets a custom fields content and allocates a struct. This function can
+ * only be applied to ID3v2 tags. It will lookup a by the given identifier
+ * and return its content.
  *  Arg 1   - The tag
  *  Arg 2   - The field names identifier e.g. ENCR
  *  Returns - see mp_get_content
  */ 
 extern id3_content* mp_get_content_custom __P((const id3_tag*, const char*));
 
-/* See mp_get_content_at_pos
+/* See mp_get_content_at_pos() and mp_get_content_custom()
  *  Arg 1   - The tag
  *  Arg 2   - The field names identifier e.g. ENCR
  *  Arg 3   - The content position in the tag
@@ -312,7 +327,19 @@ extern id3_content* mp_get_content_custom __P((const id3_tag*, const char*));
  */ 
 extern id3_content* mp_get_content_custom_at_pos __P((const id3_tag*, const char*, int));
 
-/* Copys the value of a specified field into the given tag.
+/* Frees a content struct */
+extern void mp_free_content __P((id3_content*));
+extern void mp_free_text_content __P((id3_text_content*));
+extern void mp_free_comment_content __P((id3_comment_content*));
+
+
+/* Copys the value of a specified field into the given tag. The content
+ * argument may be freed after using this function. The way a content
+ * is represented in a tag depends from the tags version and kind of field.
+ * I.e. it may be nessecary to represent a track number as a binary value in a v1
+ * tag or to embeded it into a frame for a v2 tag. The caller just needs to
+ * give the correct identifier with the value as a id3_content and to take
+ * care of freeing the id3_content value afterwards.
  *  Arg 1   - The tag to edit
  *  Arg 2   - The fields identifier
  *  Arg 3   - The fields new content
@@ -418,15 +445,6 @@ extern id3_tag* mp_alloc_tag_with_version __P((int));
 
 /* Frees tag struct */
 extern void mp_free_tag __P((id3_tag *));
-
-/* Frees a tag list beginning with the given element XXX */
-extern void mp_free_list __P((id3_tag_list*));
-
-/* Frees a content struct */
-extern void mp_free_content __P((id3_content*));
-extern void mp_free_text_content __P((id3_text_content*));
-extern void mp_free_comment_content __P((id3_comment_content*));
-extern void mp_free_wxxx_content __P((id3_wxxx_content*));
 
 __END_DECLS
 

@@ -65,7 +65,7 @@ $EXPORT_TAGS{ 'all' } = [ @{ $EXPORT_TAGS{'constants'} },
                @{ $EXPORT_TAGS{'functions'} } );
 
 
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -122,7 +122,7 @@ MP3::Mplib - Speedy access to id3v1 and id3v2 tags
 
 =head1 DESCRIPTION
 
-MP3::Mplib is a wrapper around Stefan Podkowinski's mplib written in C. It combines the best of both worlds: C's speed and Perl's nice object-orientedness. Note that B<MP3::Mplib> ships with its own patched development-version of mplib to circumvent a few limitations in the current mplib release (0.6).
+MP3::Mplib is a wrapper around Stefan Podkowinski's mplib written in C. It combines the best of both worlds: C's speed and Perl's nice object-orientedness. Note that B<MP3::Mplib> ships with its own version of mplib (currently 1.0.1).
 
 There is no sophistaced class hierarchy. You simply create a B<MP3::Mplib> object. Each method either returns a native Perl data-structure or takes one. Bang. That's it.
 
@@ -611,7 +611,7 @@ This method doesn't return anything meaningful since it never fails.
 
 sub clean_up {
     my $self = shift;
-    clean_up($self->{_mp_file});
+    _clean_up($self->{_mp_file});
     return 1;
 }
 
@@ -631,7 +631,7 @@ This method doesn't return anything meaningful since it never fails.
 
 sub dump_structure {
     my $self = shift;
-    dump_structure($self->{_mp_file});
+    _dump_structure($self->{_mp_file});
     return 1;
 }
 
@@ -905,13 +905,13 @@ No tests yet for functional interface, nor for the header access.
 
 =head1 VERSION
 
-This document describes version 0.01.
+This document describes version 0.02.
 
 =head1 AUTHOR AND COPYRIGHT
 
 Tassilo v. Parseval <tassilo.von.parseval@rwth-aachen.de>
 
-Copyright (c)  2002 Tassilo von Parseval.
+Copyright (c)  2002-2004 Tassilo von Parseval.
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 

@@ -38,11 +38,9 @@
 #define XMALLOC0(type) ((type *) xmalloc0(sizeof(type)))
 #define XMALLOCD0(type,descr) ((type *) xmallocd0(sizeof(type),descr))
 
-#define free(str) /* ... */
-
 __BEGIN_DECLS
 
-#define XMALLOC_CHECK 1
+/* define XMALLOC_CHECK 1 */
 
 void *xmalloc(size_t);
 void *xmallocd(size_t, char*);
@@ -50,8 +48,8 @@ void *xmalloc0(size_t);
 void *xmallocd0(size_t, char*);
 void *xrealloc(void *, size_t);
 void *xcalloc(size_t, size_t);
-#ifdef XMALLOC_CHECK
 void xfree(void*);
+#ifdef XMALLOC_CHECK
 void xprint_malloc_stat(void);
 #endif
 

@@ -7,10 +7,10 @@ also test the write-abilities of MP3::Mplib. But I could not create this copy.
 You can do this manually by creating this copy:
     
     # UNIXish systems
-    cp t/Dream.mp3 t/Dream_cp.mp3
+    cp t/test.mp3 t/test_cp.mp3
 
     # Windows
-    copy t\Dream.mp3 t\Dream_cp.mp3
+    copy t\test.mp3 t\test_cp.mp3
 EOABRT
 }
 
@@ -43,7 +43,7 @@ sub main::do_copy {
     } else {
         diag(<<'EOABRT');
     ** WOAH! **
-    To run the tests, I need to make a copy of the included file Dream.mp3 to
+    To run the tests, I need to make a copy of the included file test.mp3 to
     also test the write-abilities of MP3::Mplib. Even though I could create 
     *some* copy, the copy does not appear to be an identical copy (the size 
     differed).
